@@ -2,16 +2,16 @@ require File.expand_path(File.dirname(__FILE__) + '/book.rb')
 
 
 class BookShelf
-	attr_accessor :books, :owner
+    attr_accessor :books, :owner
 
     def initialize owner="anon"
         # TODO self load
-		@books = []
-	end
+	@books = []
+    end
 
-	def addBook newBook
-		books.push newBook
-	end
+    def addBook newBook
+	books.push newBook
+    end
 	
     def saveList
     	f = File.open("books.txt", "w")
@@ -30,15 +30,15 @@ class BookShelf
     	f = File.open("books.txt", "r")
     	f.read.each_line {|line| books.push(Book.load line) unless line.strip!.empty? }
     	f.close
-	end
+    end
 
-	def clearShelf
-		@books = []
-	end
+    def clearShelf
+	@books = []
+    end
 
-	def held? cartList
-		books & cartList
-	end
+    def held? cartList
+	books & cartList
+    end
 end
 
 =begin
