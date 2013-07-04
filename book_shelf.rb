@@ -2,9 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/book.rb')
 
 
 class BookShelf
-	attr_accessor :books
+	attr_accessor :books, :owner
 
-    def initialize
+    def initialize owner="anon"
         # TODO self load
 		@books = []
 	end
@@ -14,31 +14,25 @@ class BookShelf
 	end
 	
     def saveList
-    	f = File.open("books.txt", "a")
+    	f = File.open("books.txt", "w")
     	books.each {|book| f.print book.to_json,"\n" }
     	f.close
     end
 
     def listBooks
-	    if books.empty?
-            puts "book shelf is empty!"
-        end
+        puts "book shelf is empty!" if books.empty?
 
         index = 0    
     	books.each { |book| puts "#{index += 1} : " + book.to_s }
     end
 
-    def loadBooks
+    def loadShelf
     	f = File.open("books.txt", "r")
-        #f.read.each {|line| books.push JSON.parse(line)}
-        #puts JSON.parse(f.read)
-        #lines = f.read.split("\n")
-        #lines.each {|line| books.push(Book.new.load line) }
-    	f.read.each_line {|line| books.push(Book.new.load line) }
+    	f.read.each_line {|line| books.push(Book.load line) unless line.strip!.empty? }
     	f.close
 	end
 
-	def clearBooks
+	def clearShelf
 		@books = []
 	end
 

@@ -5,48 +5,32 @@ class CLI
 
 	def initialize
 		@bookshelf = BookShelf.new
-		@bookshelf.loadBooks
-	end
-
-	def addBook title, author, date=Date.new
-		bookshelf.addBook Book.new(title, author, date)
-	end
-
-	def showBookShelf
-		bookshelf.listBooks
+		@bookshelf.loadShelf
 	end
 
 	def fetch
-		loop do 
-			print ">>"
-			line = gets.chomp!
-			
+		print ">> "
+
+		loop do |line = gets.chomp!|
 			case line
-			when !line || "quit"
+			when "quit"
 				break
 			when "list"
-				self.showBookShelf
+				@bookshelf.listBooks
 			when "add"
-				bookInfo = gets.chomp!.split(",")
-				bookInfo.each { |info| info.strip! }
-				self.addBook bookInfo[0], bookInfo[1]
+				bookInfo = gets.chomp!.split(",").each { |info| info.strip! }
+				@bookshelf.addBook Book.new(bookInfo[0], bookInfo[1])
 			when "save"
-				# TODO problem here!
 				@bookshelf.saveList
+			when "help"
+				puts "list, add, save"
 			else
 				puts "There's no such instruction [#{line}]!"
 			end
+			print ">>"
 		end
 	end
 end
 
-# initial status of book shelf
-cli = CLI.new
-cli.showBookShelf
-
-# Add First Book into book shelf
-#cli.addBook "The Very First Book", "Drew barrymore"
-#cli.showBookShelf
-
-# Cmd input
-cli.fetch
+# Do CMD Process
+CLI.new.fetch
