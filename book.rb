@@ -1,26 +1,33 @@
 require 'date'
-require "json"
+require 'json'
+require File.expand_path(File.dirname(__FILE__) + '/book_meta.rb')
 
 class Book
-    attr_accessor :title, :author, :datePurchased, :read, :open
+    attr_accessor :title, :author, :metaData
 
-    def initialize title, author, datePurchased=Date.new, read=false, open=false
+    def initialize title, author, purchasedDate=Date.new, read=false, open=false
         @title = title
         @author = author
-        @datePurchased = datePurchased
-        @read = read
-        @open = open
+        @metaData = BookMeta.new(purchasedDate, read, open)
     end
 
     def self.load json
-        JSON.parse json
+        JSON json
     end
 
     def to_s
         "\"#{title}\" written by #{author}."
     end
 
-    def eql? other
+    def read?
+        @metaData.read
+    end
+
+    def open?
+        @metaData.open
+    end
+
+    def == other
         title == other.title &&  author == other.author
     end
 
@@ -34,24 +41,24 @@ class Book
             "data"          => {
                 "title"     => @title,
                 "author"    => @author,
-                "datePurchased" => @datePurchased,
-                "read"      => @read,
-                "open"      => @open
+                "metaData"  => @metaData
             }
-        }.to_json(*book)    # What is this???
+        }.to_json(*book)
     end
 
     def self.json_create (o)
-        new(o["data"]["title"], o["data"]["author"], o["data"]["datePurchased"], o["data"]["read"], o["data"]["open"])
+        new(o["data"]["title"], o["data"]["author"], o["data"]["metaData"])
     end
 end
 
-#one = Book.new "A book", "an author", Time.new(2013,7,3).to_date
-#other = Book.new "A book", "an author", Time.new(2013,5,30).to_date
+=begin
+one = Book.new "A book", "an author", Time.new(2013,7,3).to_date
+other = Book.new "A book", "an author", Time.new(2013,5,30).to_date
 
-#puts one.to_json
-#puts JSON.parse(one.to_json)
-
-#puts one.eql? other
-#print "one's hash : ", one.hash
-#print "other's hash : ", other.hash
+puts one.to_json
+parsed = JSON (one.to_json)
+puts parsed.to_s
+puts one.== other
+print "one's hash : ", one.hash
+print "other's hash : ", other.hash
+=end
