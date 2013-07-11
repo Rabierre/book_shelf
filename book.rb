@@ -2,47 +2,47 @@ require 'date'
 require "json"
 
 class Book
-	attr_accessor :title, :author, :datePurchased, :read, :open
+    attr_accessor :title, :author, :datePurchased, :read, :open
 
-	def initialize title, author, datePurchased=Date.new, read=false, open=false
-		@title = title
-		@author = author
-		@datePurchased = datePurchased
-		@read = read
-		@open = open
-	end
+    def initialize title, author, datePurchased=Date.new, read=false, open=false
+        @title = title
+        @author = author
+        @datePurchased = datePurchased
+        @read = read
+        @open = open
+    end
 
-	def self.load json
-		JSON.parse json
-	end
+    def self.load json
+        JSON.parse json
+    end
 
     def to_s
         "\"#{title}\" written by #{author}."
     end
 
     def eql? other
-    	title == other.title &&  author == other.author
+        title == other.title &&  author == other.author
     end
 
     def hash
-    	(title + author).hash
+        (title + author).hash
     end
 
     def to_json (*book)
-    	{
-    		"json_class" 	=> self.class.name,
-    		"data"			=> {
-    			"title"		=> @title,
-    			"author"	=> @author,
-    			"datePurchased"	=> @datePurchased,
-    			"read"		=> @read,
-    			"open"		=> @open
-    		}
-	    }.to_json(*book)	# What is this???
+        {
+            "json_class"    => self.class.name,
+            "data"          => {
+                "title"     => @title,
+                "author"    => @author,
+                "datePurchased" => @datePurchased,
+                "read"      => @read,
+                "open"      => @open
+            }
+        }.to_json(*book)    # What is this???
     end
 
     def self.json_create (o)
-    	new(o["data"]["title"], o["data"]["author"], o["data"]["datePurchased"], o["data"]["read"], o["data"]["open"])
+        new(o["data"]["title"], o["data"]["author"], o["data"]["datePurchased"], o["data"]["read"], o["data"]["open"])
     end
 end
 
